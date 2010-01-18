@@ -3,8 +3,6 @@ name 'Data-Recursive-Encode';
 all_from 'lib/Data/Recursive/Encode.pm';
 
 requires 'Encode';
-
-test_requires 'Test::Requires';
 test_requires 'Test::More' => 0.88;
 
 tests 't/*.t t/*/*.t t/*/*/*.t t/*/*/*/*.t';
