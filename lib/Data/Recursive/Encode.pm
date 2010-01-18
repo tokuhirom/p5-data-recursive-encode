@@ -34,7 +34,7 @@ sub _apply {
             Carp::croak("I don't know how to apply to $class");
         push @retval, $val;
     }
-    return @retval;
+    return wantarray ? @retval : $retval[0];
 }
 
 sub decode {
