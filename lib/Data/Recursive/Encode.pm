@@ -123,6 +123,7 @@ Tokuhiro Matsuno E<lt>tokuhirom AAJKLFJEF GMAIL COME<gt>
 =head1 SEE ALSO
 
 This module is inspired from L<Data::Visitor::Encode>, but this module depended to too much modules.
+I want to use this module in pure-perl, but L<Data::Visitor::Encode> depend to XS modules.
 
 L<Unicode::RecursiveDowngrade> does not supports perl5's Unicode way correctly.
 
