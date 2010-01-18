@@ -10,7 +10,6 @@ use Scalar::Util qw(blessed);
 sub _apply {
     my $code = shift;
 
-    do { use Data::Dumper; warn Dumper(\@_) } if $ENV{DEBUG};
     my @retval;
     for my $arg (@_) {
         my $class = ref $arg;
@@ -35,7 +34,6 @@ sub _apply {
             Carp::croak("I don't know how to apply to $class");
         push @retval, $val;
     }
-    do { use Data::Dumper; warn Dumper(\@retval) } if $ENV{DEBUG};
     return @retval;
 }
 
