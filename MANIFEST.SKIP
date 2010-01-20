@@ -1,4 +1,3 @@
-^\.git/
 \bRCS\b
 \bCVS\b
 ^MANIFEST\.
@@ -20,3 +19,4 @@
 \.sw[po]$
 ^\.git/
 ^author/
+\.gitignore$
