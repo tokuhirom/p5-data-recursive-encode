@@ -12,27 +12,18 @@ sub _apply {
 
     my @retval;
     for my $arg (@_) {
-        my $class = ref $arg;
-        my $val =
-            !$class ? 
-                $code->($arg) :
-            blessed($arg) ?
-                $arg : # through
-            ref($arg) eq 'ARRAY' ?
-                +[ _apply($code, @$arg) ] :
-            ref($arg) eq 'HASH'  ?
-                +{
+        my $ref = ref $arg;
+        push @retval,
+              !$ref            ? $code->($arg)
+            : blessed($arg)    ? $arg # through
+            : $ref eq 'ARRAY'  ? +[ _apply($code, @$arg) ]
+            : $ref eq 'HASH'   ? +{
                     map { $code->($_) => _apply($code, $arg->{$_}) }
-                    keys %$arg
-                } :
-            ref($arg) eq 'SCALAR' ?
-                \do{ _apply($code, $$arg) } :
-            ref($arg) eq 'GLOB'  ?
-                $arg : # through
-            ref($arg) eq 'CODE' ?
-                $arg : # through
-            Carp::croak("I don't know how to apply to $class");
-        push @retval, $val;
+                        keys %$arg
+              }
+            : $ref eq 'SCALAR' ? \_apply($code, ${$arg})
+            : $ref eq 'REF'    ? _apply($code, ${$arg})
+            :                    $arg; # IO, GLOB, CODE, LVALUE
     }
     return wantarray ? @retval : $retval[0];
 }
