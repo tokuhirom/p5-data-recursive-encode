@@ -5,26 +5,29 @@ use 5.008001;
 our $VERSION = '0.01';
 use Encode ();
 use Carp ();
-use Scalar::Util qw(blessed);
+use Scalar::Util qw(blessed refaddr);
 
 sub _apply {
     my $code = shift;
+    my $seen = shift;
 
     my @retval;
     for my $arg (@_) {
-        my $ref = ref $arg;
-        push @retval,
-              !defined($arg)   ? $arg # through undef
-            : !$ref            ? $code->($arg)
-            : blessed($arg)    ? $arg # through
-            : $ref eq 'ARRAY'  ? +[ _apply($code, @$arg) ]
-            : $ref eq 'HASH'   ? +{
-                    map { $code->($_) => _apply($code, $arg->{$_}) }
-                        keys %$arg
-              }
-            : $ref eq 'SCALAR' ? \_apply($code, ${$arg})
-            : $ref eq 'REF'    ? _apply($code, ${$arg})
-            :                    $arg; # IO, GLOB, CODE, LVALUE
+        if(my $ref = ref $arg){
+            push @retval, $seen->{refaddr($arg)} ||=
+                  blessed($arg)    ? $arg # through
+                : $ref eq 'ARRAY'  ? +[ _apply($code, $seen, @$arg) ]
+                : $ref eq 'HASH'   ? +{
+                        map { $code->($_) => _apply($code, $seen, $arg->{$_}) }
+                            keys %$arg
+                  }
+                : $ref eq 'SCALAR' ? \_apply($code, $seen, ${$arg})
+                : $ref eq 'REF'    ?  _apply($code, $seen, ${$arg})
+                :                    $arg; # through: IO, GLOB, CODE, LVALUE
+        }
+        else{
+            push @retval, defined($arg) ? $code->($arg) : $arg;
+        }
     }
     return wantarray ? @retval : $retval[0];
 }
@@ -34,7 +37,7 @@ sub decode {
     $encoding = Encode::find_encoding($encoding)
         || Carp::croak("$class: unknown encoding '$encoding'");
     $check ||= 0;
-    _apply(sub { $encoding->decode($_[0], $check) }, $stuff);
+    _apply(sub { $encoding->decode($_[0], $check) }, {}, $stuff);
 }
 
 sub encode {
@@ -42,17 +45,17 @@ sub encode {
     $encoding = Encode::find_encoding($encoding)
         || Carp::croak("$class: unknown encoding '$encoding'");
     $check ||= 0;
-    _apply(sub { $encoding->encode($_[0], $check) }, $stuff);
+    _apply(sub { $encoding->encode($_[0], $check) }, {}, $stuff);
 }
 
 sub decode_utf8 {
     my ($class, $stuff, $check) = @_;
-    _apply(sub { Encode::decode_utf8($_[0], $check) }, $stuff);
+    _apply(sub { Encode::decode_utf8($_[0], $check) }, {}, $stuff);
 }
 
 sub encode_utf8 {
     my ($class, $stuff) = @_;
-    _apply(sub { Encode::encode_utf8($_[0]) }, $stuff);
+    _apply(sub { Encode::encode_utf8($_[0]) }, {}, $stuff);
 }
 
 1;
