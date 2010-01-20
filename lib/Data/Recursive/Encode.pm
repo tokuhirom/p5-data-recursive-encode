@@ -2,7 +2,7 @@ package Data::Recursive::Encode;
 use strict;
 use warnings;
 use 5.008001;
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 use Encode ();
 use Carp ();
 use Scalar::Util qw(blessed refaddr);
@@ -120,6 +120,8 @@ encode_utf8.
 =head1 AUTHOR
 
 Tokuhiro Matsuno E<lt>tokuhirom AAJKLFJEF GMAIL COME<gt>
+
+gfx
 
 =head1 SEE ALSO
 
