@@ -14,7 +14,8 @@ sub _apply {
     for my $arg (@_) {
         my $ref = ref $arg;
         push @retval,
-              !$ref            ? $code->($arg)
+              !defined($arg)   ? $arg # through undef
+            : !$ref            ? $code->($arg)
             : blessed($arg)    ? $arg # through
             : $ref eq 'ARRAY'  ? +[ _apply($code, @$arg) ]
             : $ref eq 'HASH'   ? +{
@@ -30,12 +31,18 @@ sub _apply {
 
 sub decode {
     my ($class, $encoding, $stuff, $check) = @_;
-    _apply(sub { Encode::decode $encoding, $_[0], $check }, $stuff);
+    $encoding = Encode::find_encoding($encoding)
+        || Carp::croak("$class: unknown encoding '$encoding'");
+    $check ||= 0;
+    _apply(sub { $encoding->decode($_[0], $check) }, $stuff);
 }
 
 sub encode {
     my ($class, $encoding, $stuff, $check) = @_;
-    _apply(sub { Encode::encode $encoding, $_[0], $check }, $stuff);
+    $encoding = Encode::find_encoding($encoding)
+        || Carp::croak("$class: unknown encoding '$encoding'");
+    $check ||= 0;
+    _apply(sub { $encoding->encode($_[0], $check) }, $stuff);
 }
 
 sub decode_utf8 {
