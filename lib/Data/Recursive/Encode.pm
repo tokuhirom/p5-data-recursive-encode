@@ -12,39 +12,37 @@ sub _apply {
 
     my @retval;
     for my $arg (@_) {
-        my $class = ref $arg;
-        my $val =
-            !$class ? 
-                $code->($arg) :
-            blessed($arg) ?
-                $arg : # through
-            UNIVERSAL::isa($arg, 'ARRAY') ? 
-                +[ _apply($code, @$arg) ] :
-            UNIVERSAL::isa($arg, 'HASH')  ? 
-                +{
+        my $ref = ref $arg;
+        push @retval,
+              !defined($arg)   ? $arg # through undef
+            : !$ref            ? $code->($arg)
+            : blessed($arg)    ? $arg # through
+            : $ref eq 'ARRAY'  ? +[ _apply($code, @$arg) ]
+            : $ref eq 'HASH'   ? +{
                     map { $code->($_) => _apply($code, $arg->{$_}) }
-                    keys %$arg
-                } :
-            UNIVERSAL::isa($arg, 'SCALAR') ? 
-                \do{ _apply($code, $$arg) } :
-            UNIVERSAL::isa($arg, 'GLOB')  ? 
-                $arg : # through
-            UNIVERSAL::isa($arg, 'CODE') ? 
-                $arg : # through
-            Carp::croak("I don't know how to apply to $class");
-        push @retval, $val;
+                        keys %$arg
+              }
+            : $ref eq 'SCALAR' ? \_apply($code, ${$arg})
+            : $ref eq 'REF'    ? _apply($code, ${$arg})
+            :                    $arg; # IO, GLOB, CODE, LVALUE
     }
     return wantarray ? @retval : $retval[0];
 }
 
 sub decode {
     my ($class, $encoding, $stuff, $check) = @_;
-    _apply(sub { Encode::decode $encoding, $_[0], $check }, $stuff);
+    $encoding = Encode::find_encoding($encoding)
+        || Carp::croak("$class: unknown encoding '$encoding'");
+    $check ||= 0;
+    _apply(sub { $encoding->decode($_[0], $check) }, $stuff);
 }
 
 sub encode {
     my ($class, $encoding, $stuff, $check) = @_;
-    _apply(sub { Encode::encode $encoding, $_[0], $check }, $stuff);
+    $encoding = Encode::find_encoding($encoding)
+        || Carp::croak("$class: unknown encoding '$encoding'");
+    $check ||= 0;
+    _apply(sub { $encoding->encode($_[0], $check) }, $stuff);
 }
 
 sub decode_utf8 {

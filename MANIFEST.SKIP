@@ -20,3 +20,4 @@
 ^\.git/
 ^author/
 \.gitignore$
+benchmarks/
