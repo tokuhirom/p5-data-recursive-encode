@@ -16,21 +16,35 @@ sub _apply {
     my @retval;
     for my $arg (@_) {
         if(my $ref = ref $arg){
-            push @retval, $seen->{refaddr($arg)} ||=
-                  blessed($arg)    ? $arg # through
-                : $ref eq 'ARRAY'  ? +[ _apply($code, $seen, @$arg) ]
-                : $ref eq 'HASH'   ? +{
-                        map { $code->($_) => _apply($code, $seen, $arg->{$_}) }
-                            keys %$arg
-                  }
-                : $ref eq 'SCALAR' ? \_apply($code, $seen, ${$arg})
-                : $ref eq 'REF'    ?  _apply($code, $seen, ${$arg})
-                :                    $arg; # through: IO, GLOB, CODE, LVALUE
+            my $refaddr = refaddr($arg);
+            my $proto;
+
+            if(defined($proto = $seen->{$refaddr})){
+                 # noop
+            }
+            elsif($ref eq 'ARRAY'){
+                $proto = $seen->{$refaddr} = [];
+                @{$proto} = _apply($code, $seen, @{$arg});
+            }
+            elsif($ref eq 'HASH'){
+                $proto = $seen->{$refaddr} = {};
+                %{$proto} = _apply($code, $seen, %{$arg});
+            }
+            elsif($ref eq 'REF' or $ref eq 'SCALAR'){
+                $proto = $seen->{$refaddr} = \do{ my $scalar };
+                ${$proto} = _apply($code, $seen, ${$arg});
+            }
+            else{ # CODE, GLOB, IO, LVALUE etc.
+                $proto = $seen->{$refaddr} = $arg;
+            }
+
+            push @retval, $proto;
         }
         else{
             push @retval, defined($arg) ? $code->($arg) : $arg;
         }
     }
+
     return wantarray ? @retval : $retval[0];
 }
 
