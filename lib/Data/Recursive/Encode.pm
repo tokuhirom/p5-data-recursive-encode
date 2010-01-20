@@ -18,18 +18,18 @@ sub _apply {
                 $code->($arg) :
             blessed($arg) ?
                 $arg : # through
-            UNIVERSAL::isa($arg, 'ARRAY') ? 
+            ref($arg) eq 'ARRAY' ?
                 +[ _apply($code, @$arg) ] :
-            UNIVERSAL::isa($arg, 'HASH')  ? 
+            ref($arg) eq 'HASH'  ?
                 +{
                     map { $code->($_) => _apply($code, $arg->{$_}) }
                     keys %$arg
                 } :
-            UNIVERSAL::isa($arg, 'SCALAR') ? 
+            ref($arg) eq 'SCALAR' ?
                 \do{ _apply($code, $$arg) } :
-            UNIVERSAL::isa($arg, 'GLOB')  ? 
+            ref($arg) eq 'GLOB'  ?
                 $arg : # through
-            UNIVERSAL::isa($arg, 'CODE') ? 
+            ref($arg) eq 'CODE' ?
                 $arg : # through
             Carp::croak("I don't know how to apply to $class");
         push @retval, $val;
