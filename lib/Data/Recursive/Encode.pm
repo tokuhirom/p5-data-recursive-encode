@@ -1,8 +1,10 @@
 package Data::Recursive::Encode;
-use strict;
-use warnings;
 use 5.008001;
+use strict;
+use warnings FATAL => 'all';
+
 our $VERSION = '0.02';
+
 use Encode ();
 use Carp ();
 use Scalar::Util qw(blessed refaddr);
