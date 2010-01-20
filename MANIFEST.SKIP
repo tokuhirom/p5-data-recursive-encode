@@ -18,3 +18,5 @@
 ^[^/]+\.pl$
 ^\.shipit$
 \.sw[po]$
+^\.git/
+^author/
