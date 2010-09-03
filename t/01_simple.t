@@ -115,4 +115,15 @@ subtest "encode" => sub {
     done_testing;
 };
 
+# -------------------------------------------------------------------------
+
+subtest "from_to" => sub {
+    my $src = e(U('あいう'));
+    my $utf8 = Data::Recursive::Encode->from_to($src, 'euc-jp', 'utf-8');
+    ok !utf8::is_utf8($utf8), 'not flagged';
+    is $utf8, 'あいう';
+
+    done_testing;
+};
+
 done_testing;

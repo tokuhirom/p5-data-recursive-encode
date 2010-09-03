@@ -74,6 +74,17 @@ sub encode_utf8 {
     _apply(sub { Encode::encode_utf8($_[0]) }, {}, $stuff);
 }
 
+sub from_to {
+    my ($class, $stuff, $from_enc, $to_enc, $check) = @_;
+    @_ >= 4 or Carp::croak("Usage: $class->from_to(OCTET, FROM_ENC, TO_ENC[, CHECK])");
+    $from_enc = Encode::find_encoding($from_enc)
+        || Carp::croak("$class: unknown encoding '$from_enc'");
+    $to_enc = Encode::find_encoding($to_enc)
+        || Carp::croak("$class: unknown encoding '$to_enc'");
+    _apply(sub { Encode::from_to($_[0], $from_enc, $to_enc, $check) }, {}, $stuff);
+    return $stuff;
+}
+
 1;
 __END__
 
@@ -91,6 +102,7 @@ Data::Recursive::Encode - Encode/Decode Values In A Structure
     Data::Recursive::Encode->encode('euc-jp', $data);
     Data::Recursive::Encode->decode_utf8($data);
     Data::Recursive::Encode->encode_utf8($data);
+    Data::Recursive::Encode->from_to($data, $from_enc, $to_enc[, $check]);
 
 =head1 DESCRIPTION
 
@@ -130,6 +142,13 @@ decode_utf8.
 
 Returns a structure containing nodes which have been processed through
 encode_utf8.
+
+=item from_to
+
+    my $ret = Data::Recursive::Encode->from_to($data, FROM_ENC, TO_ENC[, CHECK]);
+
+Returns a structure containing nodes which have been processed through
+from_to.
 
 =back
 
