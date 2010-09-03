@@ -1,5 +1,9 @@
 Revision history for Perl extension Data::Recursive::Encode
 
+0.04
+
+        - added from_to method
+
 0.03
         - Work around cyclic references (gfx)
 

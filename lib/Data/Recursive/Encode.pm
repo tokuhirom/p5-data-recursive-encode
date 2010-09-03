@@ -3,7 +3,7 @@ use 5.008001;
 use strict;
 use warnings FATAL => 'all';
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use Encode ();
 use Carp ();
