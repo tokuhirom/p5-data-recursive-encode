@@ -71,7 +71,7 @@ sub decode_utf8 {
 
 sub encode_utf8 {
     my ($class, $stuff) = @_;
-    _apply(sub { Encode::encode_utf8($_[0]) }, {}, $stuff);
+    _apply(\&Encode::encode_utf8, {}, $stuff);
 }
 
 sub from_to {
