@@ -1,3 +1,5 @@
 Makefile
 inc/
 MANIFEST
+nytprof.out
+*.old
