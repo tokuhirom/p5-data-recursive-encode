@@ -48,6 +48,53 @@ sub _apply {
     return wantarray ? @retval : $retval[0];
 }
 
+sub _inplace_apply {
+    my $code = shift;
+    my $seen = shift;
+
+    LOOP: for my $arg (@_) {
+        if(my $ref = ref $arg){
+            my $refaddr = refaddr($arg);
+            if ($seen->{$refaddr}) {
+                $arg = $seen->{$refaddr};
+                next LOOP;
+            }
+
+            if ($ref eq 'ARRAY'){
+                for my $p (@$arg) {
+                    _inplace_apply($code, $seen, $p);
+                }
+                $seen->{$refaddr} = $arg;
+            }
+            elsif ($ref eq 'HASH'){
+                my %new;
+                while (my ($k, $v) = each %$arg) {
+                    _inplace_apply($code, $seen, $k);
+                    _inplace_apply($code, $seen, $v);
+                    $new{$k} = $v;
+                }
+                $arg = \%new;
+                $seen->{$refaddr} = $arg;
+            }
+            elsif ($ref eq 'REF' or $ref eq 'SCALAR'){
+                if (defined $$arg) {
+                    my $v = $$arg;
+                    _inplace_apply($code, $seen, $v);
+                    $arg = \$v;
+                }
+                $seen->{$refaddr} = $arg;
+            }
+            else { # CODE, GLOB, IO, LVALUE etc.
+                # nop.
+                $seen->{$refaddr} = $arg;
+            }
+        }
+        else{
+             $arg = defined($arg) ? $code->($arg) : $arg;
+        }
+    }
+}
+
 sub decode {
     my ($class, $encoding, $stuff, $check) = @_;
     $encoding = Encode::find_encoding($encoding)
@@ -83,6 +130,42 @@ sub from_to {
         || Carp::croak("$class: unknown encoding '$to_enc'");
     _apply(sub { Encode::from_to($_[0], $from_enc, $to_enc, $check) }, {}, $stuff);
     return $stuff;
+}
+
+sub inplace_decode_utf8 {
+    # my ($class, $stuff, $check) = @_;
+    my $check = $_[2];
+    _inplace_apply(sub { Encode::decode_utf8($_[0], $check) }, {}, $_[1]);
+}
+
+sub inplace_encode_utf8 {
+    _inplace_apply(\&Encode::encode_utf8, {}, $_[1]);
+}
+
+sub inplace_decode {
+    my ($class, $encoding, $stuff, $check) = @_;
+    $encoding = Encode::find_encoding($encoding)
+        || Carp::croak("$class: unknown encoding '$encoding'");
+    $check ||= 0;
+    _inplace_apply(sub { $encoding->decode($_[0], $check) }, {}, $_[2]);
+}
+
+sub inplace_encode {
+    my ($class, $encoding, $stuff, $check) = @_;
+    $encoding = Encode::find_encoding($encoding)
+        || Carp::croak("$class: unknown encoding '$encoding'");
+    $check ||= 0;
+    _inplace_apply(sub { $encoding->encode($_[0], $check) }, {}, $_[2]);
+}
+
+sub inplace_from_to {
+    my ($class, $stuff, $from_enc, $to_enc, $check) = @_;
+    @_ >= 4 or Carp::croak("Usage: $class->from_to(OCTET, FROM_ENC, TO_ENC[, CHECK])");
+    $from_enc = Encode::find_encoding($from_enc)
+        || Carp::croak("$class: unknown encoding '$from_enc'");
+    $to_enc = Encode::find_encoding($to_enc)
+        || Carp::croak("$class: unknown encoding '$to_enc'");
+    _inplace_apply(sub { Encode::from_to($_[0], $from_enc, $to_enc, $check); $_[0] }, {}, $_[1]);
 }
 
 1;

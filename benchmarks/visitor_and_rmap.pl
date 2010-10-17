@@ -14,20 +14,24 @@ my $cmp = timethese(
     -1,
     {
         data_recursive => sub {
-            my $sample = $sample->();
-            my ($s) = Data::Recursive::Encode->encode_utf8($sample);
+            my $input = $sample->();
+            my ($s) = Data::Recursive::Encode->encode('utf8', $input);
+        },
+        data_recursive_inplace => sub {
+            my $input = $sample->();
+            Data::Recursive::Encode->inplace_encode('utf8', $input);
         },
         data_visitor => sub {
-            my $sample = $sample->();
-            Data::Visitor::Encode->encode('utf8', $sample);
+            my $input = $sample->();
+            Data::Visitor::Encode->encode('utf8', $input);
         },
         data_rmap => sub {
-            my $sample = $sample->();
-            Data::Rmap::rmap { $_ = Encode::encode_utf8($_) } $sample;
+            my $input = $sample->();
+            Data::Rmap::rmap { $_ = Encode::encode_utf8($_) } $input;
         },
         deep_encode => sub {
-            my $sample = $sample->();
-            Deep::Encode::deep_utf8_decode($sample);
+            my $input = $sample->();
+            Deep::Encode::deep_encode($input, 'utf8');
         },
     }
 );
