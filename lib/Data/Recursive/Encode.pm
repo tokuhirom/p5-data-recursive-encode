@@ -8,6 +8,7 @@ our $VERSION = '0.04';
 use Encode ();
 use Carp ();
 use Scalar::Util qw(blessed refaddr);
+use Data::Util qw(is_number);
 
 sub _apply {
     my $code = shift;
@@ -41,7 +42,7 @@ sub _apply {
             push @retval, $proto;
         }
         else{
-            push @retval, defined($arg) ? $code->($arg) : $arg;
+            push @retval, defined($arg) && ! is_number($arg) ? $code->($arg) : $arg;
         }
     }
 
