@@ -2,6 +2,10 @@ Revision history for Perl extension Data::Recursive::Encode
 
 {{$NEXT}}
 
+0.05 2014-10-15T05:15:28Z
+
+    - added $DO_NOT_PROCESS_NUMERIC_VALUE feature(Cside_++)
+
 0.04
 
         - added from_to method

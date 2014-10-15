@@ -65,7 +65,7 @@
          "web" : "https://git@github.com/tokuhirom/p5-data-recursive-encode"
       }
    },
-   "version" : "0.04",
+   "version" : "0.05",
    "x_contributors" : [
       "gfx <gfuji@cpan.org>",
       "Hiroki Honda <cside.story@gmail.com>",
