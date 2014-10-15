@@ -8,7 +8,7 @@ our $VERSION = '0.04';
 use Encode ();
 use Carp ();
 use Scalar::Util qw(blessed refaddr);
-use Data::Util qw(is_number);
+use B;
 
 sub _apply {
     my $code = shift;
@@ -42,7 +42,7 @@ sub _apply {
             push @retval, $proto;
         }
         else{
-            push @retval, defined($arg) && ! is_number($arg) ? $code->($arg) : $arg;
+            push @retval, defined($arg) && ! _is_number($arg) ? $code->($arg) : $arg;
         }
     }
 
@@ -84,6 +84,15 @@ sub from_to {
         || Carp::croak("$class: unknown encoding '$to_enc'");
     _apply(sub { Encode::from_to($_[0], $from_enc, $to_enc, $check) }, {}, $stuff);
     return $stuff;
+}
+
+sub _is_number {
+    my $value = shift;
+    return 0 unless defined $value;
+
+    my $b_obj = B::svref_2object(\$value);
+    my $flags = $b_obj->FLAGS;
+    return $flags & ( B::SVp_IOK | B::SVp_NOK ) && !( $flags & B::SVp_POK ) ? 1 : 0;
 }
 
 1;
