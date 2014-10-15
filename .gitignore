@@ -3,3 +3,11 @@ inc/
 MANIFEST
 nytprof.out
 *.old
+/data-recursive-encode-*
+/.build
+/_build_params
+/Build
+/Build.bat
+!Build/
+!META.json
+!LICENSE

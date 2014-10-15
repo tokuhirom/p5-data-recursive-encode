@@ -1,0 +1,74 @@
+{
+   "abstract" : "Encode/Decode Values In A Structure",
+   "author" : [
+      "Tokuhiro Matsuno <tokuhirom AAJKLFJEF GMAIL COM>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Minilla/v2.1.2, CPAN::Meta::Converter version 2.141520",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "data-recursive-encode",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "xt",
+         "inc",
+         "share",
+         "eg",
+         "examples",
+         "author",
+         "builder"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "6.59",
+            "JSON" : "0",
+            "Test::More" : "0.94"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "Module::Build" : "0.38"
+         }
+      },
+      "develop" : {
+         "requires" : {
+            "Test::CPAN::Meta" : "0",
+            "Test::MinimumVersion::Fast" : "0.04",
+            "Test::PAUSE::Permissions" : "0.04",
+            "Test::Pod" : "1.41",
+            "Test::Spellunker" : "v0.2.7"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "perl" : "5.008001"
+         }
+      }
+   },
+   "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://git@github.com/tokuhirom/p5-data-recursive-encode/issues"
+      },
+      "homepage" : "https://git@github.com/tokuhirom/p5-data-recursive-encode",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://git@github.com/tokuhirom/p5-data-recursive-encode.git",
+         "web" : "https://git@github.com/tokuhirom/p5-data-recursive-encode"
+      }
+   },
+   "version" : "0.04",
+   "x_contributors" : [
+      "gfx <gfuji@cpan.org>",
+      "Hiroki Honda <cside.story@gmail.com>",
+      "Tokuhiro Matsuno <tokuhirom@gmail.com>"
+   ]
+}
