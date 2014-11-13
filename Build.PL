@@ -21,7 +21,7 @@ my %args = (
         'Module::Build' => 0.38,
     },
 
-    name            => 'data-recursive-encode',
+    name            => 'Data-Recursive-Encode',
     module_name     => 'Data::Recursive::Encode',
     allow_pureperl => 0,
 
