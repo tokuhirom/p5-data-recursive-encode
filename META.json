@@ -4,7 +4,7 @@
       "Tokuhiro Matsuno <tokuhirom AAJKLFJEF GMAIL COM>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v2.2.0, CPAN::Meta::Converter version 2.142690",
+   "generated_by" : "Minilla/v2.2.0, CPAN::Meta::Converter version 2.141520",
    "license" : [
       "perl_5"
    ],
@@ -63,11 +63,11 @@
          "web" : "https://github.com/tokuhirom/p5-data-recursive-encode"
       }
    },
-   "version" : "0.05",
+   "version" : "0.06",
    "x_contributors" : [
       "gfx <gfuji@cpan.org>",
       "Hiroki Honda <cside.story@gmail.com>",
-      "Tokuhiro Matsuno <tokuhirom@gmail.com>",
-      "Hiroyoshi Houchi <git@hixi-hyi.com>"
+      "Hiroyoshi Houchi <git@hixi-hyi.com>",
+      "Tokuhiro Matsuno <tokuhirom@gmail.com>"
    ]
 }
