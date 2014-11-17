@@ -4,7 +4,7 @@
       "Tokuhiro Matsuno <tokuhirom AAJKLFJEF GMAIL COM>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v2.1.2, CPAN::Meta::Converter version 2.141520",
+   "generated_by" : "Minilla/v2.2.0, CPAN::Meta::Converter version 2.142690",
    "license" : [
       "perl_5"
    ],
@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "data-recursive-encode",
+   "name" : "Data-Recursive-Encode",
    "no_index" : {
       "directory" : [
          "t",
@@ -26,13 +26,6 @@
       ]
    },
    "prereqs" : {
-      "build" : {
-         "requires" : {
-            "ExtUtils::MakeMaker" : "6.59",
-            "JSON" : "0",
-            "Test::More" : "0.94"
-         }
-      },
       "configure" : {
          "requires" : {
             "Module::Build" : "0.38"
@@ -51,24 +44,30 @@
          "requires" : {
             "perl" : "5.008001"
          }
+      },
+      "test" : {
+         "requires" : {
+            "JSON" : "0"
+         }
       }
    },
    "release_status" : "unstable",
    "resources" : {
       "bugtracker" : {
-         "web" : "https://git@github.com/tokuhirom/p5-data-recursive-encode/issues"
+         "web" : "https://github.com/tokuhirom/p5-data-recursive-encode/issues"
       },
-      "homepage" : "https://git@github.com/tokuhirom/p5-data-recursive-encode",
+      "homepage" : "https://github.com/tokuhirom/p5-data-recursive-encode",
       "repository" : {
          "type" : "git",
-         "url" : "git://git@github.com/tokuhirom/p5-data-recursive-encode.git",
-         "web" : "https://git@github.com/tokuhirom/p5-data-recursive-encode"
+         "url" : "git://github.com/tokuhirom/p5-data-recursive-encode.git",
+         "web" : "https://github.com/tokuhirom/p5-data-recursive-encode"
       }
    },
    "version" : "0.05",
    "x_contributors" : [
       "gfx <gfuji@cpan.org>",
       "Hiroki Honda <cside.story@gmail.com>",
-      "Tokuhiro Matsuno <tokuhirom@gmail.com>"
+      "Tokuhiro Matsuno <tokuhirom@gmail.com>",
+      "Hiroyoshi Houchi <git@hixi-hyi.com>"
    ]
 }
